@@ -106,7 +106,7 @@
                 <div class="col-lg-11">
                     <form action="{{ url()->current() }}" method="GET" class="card shadow-sm border-0 p-3 bg-light text-start">
                         <div class="row g-2 align-items-center">
-                            {{-- Input Pencarian --}}
+                            {{-- Input Pencarian ---}}
                             <div class="col-md-4">
                                 <div class="input-group">
                                     <span class="input-group-text bg-white border-end-0">

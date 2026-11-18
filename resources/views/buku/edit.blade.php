@@ -15,8 +15,7 @@
 
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                {{-- TODO 8: Tambahkan atribut enctype="multipart/form-data" pada form di bawah ini --}}
-                <form action="{{ route('buku.update', $buku->id) }}" method="POST">
+                <form action="{{ route('buku.update', $buku->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -64,7 +63,28 @@
                         </div>
                     </div>
 
-                    {{-- TODO 8: Tampilkan gambar sampul saat ini ($buku->cover) dan sediakan input file untuk mengganti sampul --}}
+                    {{-- TODO 8: Sampul saat ini + input ganti sampul --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Sampul Saat Ini</label><br>
+                        @if($buku->cover)
+                            <img src="{{ asset('storage/' . $buku->cover) }}" alt="Sampul {{ $buku->judul }}" class="img-thumbnail" style="max-height: 120px;">
+                        @else
+                            <span class="text-muted small">Belum ada sampul</span>
+                        @endif
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cover" class="form-label fw-semibold">Ganti Sampul (Opsional)</label>
+                        <input type="file" class="form-control @error('cover') is-invalid @enderror" id="cover" name="cover" accept="image/*" onchange="previewImage(event)">
+                        @error('cover')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <small class="text-muted">Biarkan kosong jika tidak ingin mengubah sampul. Format: JPG, JPEG, PNG. Maks 2 MB.</small>
+
+                        <div class="mt-2">
+                            <img id="imagePreview" src="#" alt="Pratinjau Sampul" class="img-thumbnail d-none" style="max-height: 160px;">
+                        </div>
+                    </div>
 
                     <div class="d-flex justify-content-end gap-2">
                         <a href="{{ route('buku.index') }}" class="btn btn-light border px-4">Batal</a>
@@ -77,5 +97,19 @@
         </div>
     </div>
 </div>
-@endsection
 
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var preview = document.getElementById('imagePreview');
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+@endsection
